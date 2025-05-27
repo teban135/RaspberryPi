@@ -1,0 +1,257 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f5f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 90%;
+    max-width: 1000px;
+}
+
+.tarjeta {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+}
+
+.tarjeta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo mejorado de la gota de sangre para SpO2 */
+.gota-sangre {
+    width: 80px;
+    height: 120px;
+    background: #ff4757;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px;
+    transform: rotate(45deg);
+    box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.2);
+    animation: pulsate 2s ease-in-out infinite;
+}
+
+.gota-interior {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    top: 15%;
+    left: 20%;
+}
+
+.valor-spo2 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    transform: rotate(-45deg);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pulsate {
+    0%, 100% { transform: rotate(45deg) scale(1); }
+    50% { transform: rotate(45deg) scale(1.05); }
+}
+
+/* Estilo mejorado del corazón con ECG interno */
+.contenedor-corazon {
+    position: relative;
+    width: 140px;
+    height: 120px;
+    margin: 0 auto 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.corazon {
+    position: relative;
+    width: 100px;
+    height: 90px;
+    overflow: hidden;
+}
+
+.corazon:before,
+.corazon:after {
+    content: "";
+    position: absolute;
+    width: 50px;
+    height: 80px;
+    background: #ff5e5e;
+    border-radius: 50px 50px 0 0;
+    z-index: 1;
+}
+
+.corazon:before {
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+    left: 50px;
+    box-shadow: inset 5px 5px 15px rgba(255, 0, 0, 0.3);
+}
+
+.corazon:after {
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+    left: 0;
+    box-shadow: inset -5px 5px 15px rgba(255, 0, 0, 0.3);
+}
+
+/* ECG interno del corazón */
+.ecg-interno {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.linea-ecg-interna {
+    position: absolute;
+    width: 300px;
+    height: 40px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0 10 L20 10 L25 5 L30 15 L35 5 L40 10 L60 10 L65 5 L70 15 L75 5 L80 10 L100 10" stroke="white" stroke-width="1.5" fill="none"/></svg>') repeat-x;
+    animation: moverECGInterno 1.5s linear infinite;
+}
+
+@keyframes moverECGInterno {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100px); }
+}
+
+@keyframes latido {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.2); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+    60% { transform: scale(1); }
+}
+
+/* Estilo del termómetro */
+.termometro {
+    width: 60px;
+    height: 140px;
+    margin: 0 auto 15px;
+    position: relative;
+    transition: all 0.5s;
+}
+
+.termometro svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Color por temperatura */
+.temp-normal { fill: #2ecc71; } /* Verde - menos de 36°C */
+.temp-elevada { fill: #f39c12; } /* Naranja - entre 36°C y 37.5°C */
+.temp-fiebre { fill: #e74c3c; } /* Rojo - más de 37.5°C */
+.temp-peligro { fill: #c0392b; } /* Rojo oscuro - más de 41°C */
+
+/* Estilo de los textos */
+.etiqueta {
+    margin: 10px 0 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Sección edad */
+.icono-edad {
+    font-size: 50px;
+    margin-bottom: 10px;
+    color: #3498db;
+}
+
+/* Sección ejercicio */
+.opciones-ejercicio {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.opciones-ejercicio label {
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.opciones-ejercicio label:hover {
+    background-color: #f0f0f0;
+}
+
+.opciones-ejercicio input {
+    margin-right: 5px;
+}
+
+/* Sección recomendaciones */
+.recomendaciones {
+    grid-column: span 3;
+    text-align: center;
+    padding: 25px;
+}
+
+.mensaje-ok {
+    color: #2ecc71;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: rgba(46, 204, 113, 0.1);
+    display: inline-block;
+}
+
+.mensaje-alerta {
+    color: #e74c3c;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: rgba(231, 76, 60, 0.1);
+    display: inline-block;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .contenedor {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .recomendaciones {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .contenedor {
+        grid-template-columns: 1fr;
+    }
+    
+    .recomendaciones {
+        grid-column: span 1;
+    }
+}

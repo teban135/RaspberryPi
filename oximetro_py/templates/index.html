@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Salud Pi</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="contenedor">
+        <!-- Sección SpO2 (Gota de sangre) -->
+        <div class="tarjeta">
+            <div class="gota-sangre">
+                <div class="gota-interior"></div>
+                <span class="valor-spo2">{{ spo2 }}%</span>
+            </div>
+            <p class="etiqueta">SpO2</p>
+        </div>
+
+        <!-- Sección Frecuencia (Corazón + ECG) -->
+        <div class="tarjeta">
+            <div class="contenedor-corazon">
+                <div class="corazon" id="corazon">
+                    <div class="ecg-interno">
+                        <div class="linea-ecg-interna"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="etiqueta">Frecuencia: {{ frecuencia }} bpm</p>
+        </div>
+
+        <!-- Sección Temperatura (Termómetro) -->
+        <div class="tarjeta">
+            <div class="termometro" data-temp="{{ temperatura }}">
+                <svg viewBox="0 0 60 180" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Contorno del termómetro -->
+                    <rect x="20" y="20" width="20" height="120" rx="10" fill="none" stroke="#333" stroke-width="2"/>
+                    <!-- Bulbo inferior -->
+                    <circle cx="30" cy="150" r="15" fill="none" stroke="#333" stroke-width="2"/>
+                    <!-- Líquido (mercurio) que cambia de color -->
+                    <rect class="liquido-termometro" x="22" y="50" width="16" height="90" rx="8"/>
+                    <!-- Marcas de temperatura -->
+                    <line x1="40" y1="30" x2="45" y2="30" stroke="#333" stroke-width="1"/>
+                    <line x1="40" y1="60" x2="45" y2="60" stroke="#333" stroke-width="1"/>
+                    <line x1="40" y1="90" x2="45" y2="90" stroke="#333" stroke-width="1"/>
+                    <line x1="40" y1="120" x2="45" y2="120" stroke="#333" stroke-width="1"/>
+                </svg>
+            </div>
+            <p class="etiqueta">Temperatura corporal: {{ temperatura }} °C</p>
+        </div>
+
+        <!-- Sección Recomendaciones -->
+        <div class="tarjeta recomendaciones">
+            <p class="etiqueta">Recomendaciones:</p>
+            {% if alerta %}
+                <p class="mensaje-alerta">⚠️ ¡Valores fuera de rango! Consulta a un profesional.</p>
+            {% else %}
+                <p class="mensaje-ok">✅ Todo en orden. ¡Sigue así!</p>
+            {% endif %}
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
