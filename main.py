@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import logging
 import uvicorn
+import os
 
 # Importar la clase MAX30100
 from max30100 import MAX30100
@@ -18,8 +19,20 @@ logger = logging.getLogger(__name__)
 
 # Configuración de FastAPI
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+
+# Verificar que las carpetas existen
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+    print("✅ Carpeta static montada correctamente")
+else:
+    print("⚠️  Carpeta static no encontrada")
+
+if os.path.exists("templates"):
+    templates = Jinja2Templates(directory="templates")
+    print("✅ Carpeta templates configurada correctamente")
+else:
+    print("❌ Carpeta templates no encontrada")
+    templates = None
 
 # Configuración de pines
 DHT_PIN = 7     # GPIO 7 para DHT11
@@ -215,8 +228,15 @@ def read_sensors():
 # Rutas de FastAPI
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+    print("\n🌐 SOLICITUD WEB RECIBIDA")
+    print("-" * 30)
+    
+    if templates is None:
+        return HTMLResponse("<h1>Error: Carpeta templates no encontrada</h1>")
+    
     data = read_sensors()
     if data is None:
+        print("⚠️  Usando valores por defecto debido a error en sensores")
         # En caso de error, devolver valores por defecto para evitar crash
         data = {
             "spo2": 0,
@@ -228,17 +248,45 @@ async def home(request: Request):
             "alerta": True
         }
     
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        **data
-    })
+    print(f"📤 Enviando datos al template:")
+    for key, value in data.items():
+        print(f"   {key}: {value}")
+    
+    try:
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            **data
+        })
+    except Exception as e:
+        print(f"❌ Error al renderizar template: {e}")
+        return HTMLResponse(f"<h1>Error al cargar la página</h1><p>{str(e)}</p>")
 
 @app.get("/api/data")
 async def api_data():
+    print("\n🔌 SOLICITUD API RECIBIDA")
+    print("-" * 25)
+    
     data = read_sensors()
     if data is None:
-        return {"error": "No se pudieron leer los sensores"}
+        error_response = {"error": "No se pudieron leer los sensores"}
+        print(f"📤 Enviando error: {error_response}")
+        return error_response
+    
+    print(f"📤 Enviando datos JSON: {data}")
     return data
+
+# Endpoint adicional para verificar estructura de archivos
+@app.get("/api/debug")
+async def debug_info():
+    return {
+        "static_exists": os.path.exists("static"),
+        "templates_exists": os.path.exists("templates"),
+        "index_html_exists": os.path.exists("templates/index.html"),
+        "style_css_exists": os.path.exists("static/style.css"),
+        "script_js_exists": os.path.exists("static/script.js"),
+        "working_directory": os.getcwd(),
+        "files_in_current_dir": os.listdir(".")
+    }
 
 # Limpieza
 def cleanup():
